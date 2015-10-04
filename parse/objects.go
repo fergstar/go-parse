@@ -27,12 +27,6 @@ type Success struct {
 	ObjectID  string `json:"objectId"`
 }
 
-// APIError represents a Parse API Error response
-type APIError struct {
-	Code  string `json:"code"`
-	Error string `json:"error"`
-}
-
 // Create a new object on the Parse Cloud.
 func (o *ObjectService) Create(className string, objectBody interface{}) (*Success, *http.Response, error) {
 
