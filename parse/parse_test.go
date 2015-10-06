@@ -13,6 +13,7 @@ func TestNewClient(t *testing.T) {
 	if client.Objects.sling == client.sling {
 		t.Errorf("Must pass ObjectsService a derived sling copy.")
 	}
+
 }
 
 // testing utils

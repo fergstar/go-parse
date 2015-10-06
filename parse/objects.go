@@ -32,7 +32,7 @@ func (o *ObjectService) Create(className string, objectBody interface{}) (*Succe
 
 	success := new(Success)
 	apiError := new(APIError)
-	path := fmt.Sprintf("/%s", className)
+	path := fmt.Sprintf("%s", className)
 	resp, err := o.sling.New().Post(path).BodyJSON(objectBody).Receive(success, apiError)
 	return success, resp, err
 }
