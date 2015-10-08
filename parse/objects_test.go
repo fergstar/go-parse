@@ -40,3 +40,14 @@ func TestObjectsService_Create(t *testing.T) {
 	}
 
 }
+
+func TestObjectsService_Retrieve(t *testing.T) {
+	httpClient, mux, server := testServer()
+	defer server.Close()
+
+	client := NewClient(httpClient)
+}
+
+// func TestObjectService_Update
+
+// func TestObjectService_Delete

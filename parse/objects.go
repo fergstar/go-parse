@@ -37,12 +37,18 @@ func (o *ObjectService) Create(className string, objectBody interface{}) (*Succe
 	return success, resp, err
 }
 
-/*
 // Retrieve an object from the Parse Cloud.
-func (o *ObjectService) Retrieve(className string) {
+func (o *ObjectService) Retrieve(className string, objectID string) (interface{}, *http.Response, error) {
 
+	var parseObject interface{}
+	apiError := new(APIError)
+	path := fmt.Sprintf("%s/%s", className, objectID)
+	resp, err := o.sling.New().Get(path).Receive(parseObject, apiError)
+
+	return parseObject, resp, err
 }
 
+/*
 // Update the data on an object that already exists.
 func (o *ObjectService) Update(className string) {
 
