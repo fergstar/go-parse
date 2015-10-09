@@ -34,7 +34,7 @@ func (o *ObjectService) Create(className string, objectBody interface{}) (*Succe
 	apiError := new(APIError)
 	path := fmt.Sprintf("%s", className)
 	resp, err := o.sling.New().Post(path).BodyJSON(objectBody).Receive(success, apiError)
-	return success, resp, err
+	return success, resp, releventError(err, apiError)
 }
 
 // Retrieve an object from the Parse Cloud.
@@ -45,7 +45,7 @@ func (o *ObjectService) Retrieve(className string, objectID string) (interface{}
 	path := fmt.Sprintf("%s/%s", className, objectID)
 	resp, err := o.sling.New().Get(path).Receive(parseObject, apiError)
 
-	return parseObject, resp, err
+	return parseObject, resp, releventError(err, apiError)
 }
 
 /*
