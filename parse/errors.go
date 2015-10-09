@@ -14,7 +14,7 @@ type APIError struct {
 func (e *APIError) Error() string {
 
 	if len(e.ErrorMessage) > 0 {
-		return fmt.Sprintf("parse: %d %v", e.Code, e.Error)
+		return fmt.Sprintf("parse: %v - %v", e.Code, e.Error)
 	}
 
 	return ""
