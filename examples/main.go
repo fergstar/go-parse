@@ -39,8 +39,16 @@ func main() {
 	success, _, err := client.Objects.Create("gamescore", objectBody)
 
 	if err != nil {
-		log.Fatal("Error: %v", err)
+		log.Fatal(err.Error())
 	}
 
 	fmt.Println(success.ObjectID)
+
+	blue, _, err := client.Objects.Retrieve("gamescore", success.ObjectID)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	fmt.Println(blue)
 }
