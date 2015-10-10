@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/fergstar/go-parse/parse"
 	"github.com/kelseyhightower/envconfig"
@@ -14,7 +15,8 @@ type config struct {
 }
 
 type GameScore struct {
-	Name string
+	ObjectID string
+	Name     string
 }
 
 func main() {
@@ -44,11 +46,17 @@ func main() {
 
 	fmt.Println(success.ObjectID)
 
-	blue, _, err := client.Objects.Retrieve("gamescore", success.ObjectID)
+	jsonRawMessage, _, err := client.Objects.Retrieve("gamescore", success.ObjectID)
 
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	fmt.Println(blue)
+	var gameScore GameScore
+	err = json.Unmarshal([]byte(*jsonRawMessage), &gameScore)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	fmt.Println(gameScore)
 }

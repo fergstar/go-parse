@@ -1,6 +1,7 @@
 package parse
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -38,9 +39,9 @@ func (o *ObjectService) Create(className string, objectBody interface{}) (*Succe
 }
 
 // Retrieve an object from the Parse Cloud.
-func (o *ObjectService) Retrieve(className string, objectID string) (interface{}, *http.Response, error) {
+func (o *ObjectService) Retrieve(className string, objectID string) (*json.RawMessage, *http.Response, error) {
 
-	var parseObject interface{}
+	var parseObject *json.RawMessage = &json.RawMessage{}
 	apiError := new(APIError)
 	path := fmt.Sprintf("%s/%s", className, objectID)
 	resp, err := o.sling.New().Get(path).Receive(parseObject, apiError)
