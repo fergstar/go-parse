@@ -17,7 +17,7 @@ func TestObjectsService_Create(t *testing.T) {
 	httpClient, mux, server := testServer()
 	defer server.Close()
 
-	mux.HandleFunc("/1/classes/gamescore", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/1/classes/{className}", func(w http.ResponseWriter, r *http.Request) {
 		assertMethod(t, "POST", r)
 		fmt.Println(r.URL.String())
 		w.Header().Set("Content-Type", "application/json")
@@ -26,7 +26,7 @@ func TestObjectsService_Create(t *testing.T) {
 
 	testObject := &GameScore{Score: 23, PlayerName: "Test", CheatMode: false}
 
-	client := NewClient(httpClient)
+	client := NewClient(httpClient, "ApplicationId", "RestAPIkey")
 	success, _, err := client.Objects.Create("gamescore", testObject)
 
 	if err != nil {
@@ -45,7 +45,23 @@ func TestObjectsService_Retrieve(t *testing.T) {
 	httpClient, mux, server := testServer()
 	defer server.Close()
 
-	client := NewClient(httpClient)
+	mux.HandleFunc("/1/classes/{className}/{objectId}", func(w http.ResponseWriter, r *http.Request) {
+		assertMethod(t, "GET", r)
+	})
+
+	client := NewClient(httpClient, "ApplicationId", "RestAPIkey")
+	jsonMessage, _, err := client.Objects.Retrieve("gamescore", "Ed1nuqPvcm")
+
+	if err != nil {
+		t.Errorf("Objects.Retrieve error %v", err)
+	}
+
+	expected := &GameScore{Score: 23, PlayerName: "Test", CheatMode: false}
+
+	if !reflect.DeepEqual(expected, jsonMessage) {
+		t.Errorf("Objects.Retrieve expected:\n%+v, got:\n %+v", expected, jsonMessage)
+	}
+
 }
 
 // func TestObjectService_Update

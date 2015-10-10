@@ -6,10 +6,12 @@ import (
 	"net/url"
 	"reflect"
 	"testing"
+
+	"github.com/gorilla/mux"
 )
 
 func TestNewClient(t *testing.T) {
-	client := NewClient(nil)
+	client := NewClient(nil, "", "")
 	if client.Objects.sling == client.sling {
 		t.Errorf("Must pass ObjectsService a derived sling copy.")
 	}
@@ -21,16 +23,16 @@ func TestNewClient(t *testing.T) {
 // testserver returns an http Client, ServeMux, and Server. The client proxies
 // requests tot he server and handlers can be registered on the mux to handle
 // requests. The caller must close the test server.
-func testServer() (*http.Client, *http.ServeMux, *httptest.Server) {
-	mux := http.NewServeMux()
-	server := httptest.NewServer(mux)
+func testServer() (*http.Client, *mux.Router, *httptest.Server) {
+	m := mux.NewRouter()
+	server := httptest.NewServer(m)
 	transport := &RewriteTransport{&http.Transport{
 		Proxy: func(req *http.Request) (*url.URL, error) {
 			return url.Parse(server.URL)
 		},
 	}}
 	client := &http.Client{Transport: transport}
-	return client, mux, server
+	return client, m, server
 }
 
 // RewriteTransport rewrites https requests to http to avoid TLS cert issues
