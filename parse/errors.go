@@ -6,7 +6,7 @@ import (
 
 // APIError represents a Parse API Error response.
 type APIError struct {
-	Code         string `json:"code"`
+	Code         int    `json:"code"`
 	ErrorMessage string `json:"error"`
 }
 
@@ -14,7 +14,7 @@ type APIError struct {
 func (e *APIError) Error() string {
 
 	if len(e.ErrorMessage) > 0 {
-		return fmt.Sprintf("parse: %v - %v", e.Code, e.Error)
+		return fmt.Sprintf("parse: %v - %s", e.Code, e.ErrorMessage)
 	}
 
 	return ""

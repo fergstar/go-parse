@@ -23,18 +23,18 @@ func NewUserService(sling *sling.Sling) *UserService {
 }
 
 // Success when a user succesfully signsup
-type Success struct {
+type SuccessSignup struct {
 	CreatedAt    string `json:"createdAt"`
 	ObjectID     string `json:"objectId"`
 	SessionToken string `json:"sessionToken"`
 }
 
 // SignUp a new user
-func (u *UserService) SignUp(userDetails interface{}) (*Success, *http.Response, error) {
+func (u *UserService) SignUp(userDetails interface{}) (*SuccessSignup, *http.Response, error) {
 	// TODO marshal userDetails into user struct and
 	// validate username and password available
 
-	success := new(Success)
+	success := new(SuccessSignup)
 	apiError := new(APIError)
 	path := fmt.Sprintf("users")
 	resp, err := u.sling.New().Post(path).BodyJSON(userDetails).Receive(success, apiError)
@@ -51,4 +51,14 @@ func (u *UserService) LogIn(userDetails interface{}) (*json.RawMessage, *http.Re
 	resp, err := u.sling.New().Post(path).Receive(successLogin, apiError)
 
 	return successLogin, resp, releventError(err, apiError)
+}
+
+// Delete user from Parse
+func (u *UserService) Delete(objectID, sessionToken string) (*http.Response, error) {
+
+	apiError := new(APIError)
+	path := fmt.Sprintf("users/%s", objectID)
+	resp, err := u.sling.New().Set("X-Parse-Session-Token", sessionToken).Delete(path).Receive(nil, apiError)
+
+	return resp, releventError(err, apiError)
 }

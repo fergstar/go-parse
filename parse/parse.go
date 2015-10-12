@@ -15,6 +15,7 @@ type Client struct {
 
 	// Different Parse API Services
 	Objects *ObjectService
+	Users   *UserService
 }
 
 // NewClient returns a new Client.
@@ -24,5 +25,6 @@ func NewClient(httpClient *http.Client, parseApplicationId, parseRestApiKey stri
 
 	return &Client{
 		Objects: NewObjectService(base.New()),
+		Users:   NewUserService(base.New()),
 	}
 }
