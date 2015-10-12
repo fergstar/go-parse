@@ -19,6 +19,11 @@ type GameScore struct {
 	Name     string
 }
 
+type User struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 func main() {
 	var c config
 	err := envconfig.Process("PARSE", &c)
@@ -77,4 +82,26 @@ func main() {
 
 	fmt.Println("Object deleted: " + success.ObjectID)
 
+	/* USER SERVICE */
+
+	// sign up
+	user := &User{Username: "TestUser5", Password: "TestPassword"}
+	successSignup, _, err := client.Users.SignUp(user)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	fmt.Println("Signup Success: ", successSignup.SessionToken)
+
+	// log in
+
+	// delete user
+	_, err = client.Users.Delete(successSignup.ObjectID, successSignup.SessionToken)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	fmt.Println("signup delete.")
 }
