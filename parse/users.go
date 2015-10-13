@@ -29,6 +29,11 @@ type SuccessSignup struct {
 	SessionToken string `json:"sessionToken"`
 }
 
+type LoginDetails struct {
+	Username string `url:"username"`
+	Password string `url:"password"`
+}
+
 // SignUp a new user
 func (u *UserService) SignUp(userDetails interface{}) (*SuccessSignup, *http.Response, error) {
 	// TODO marshal userDetails into user struct and
@@ -43,12 +48,13 @@ func (u *UserService) SignUp(userDetails interface{}) (*SuccessSignup, *http.Res
 }
 
 // LogIn user
-func (u *UserService) LogIn(userDetails interface{}) (*json.RawMessage, *http.Response, error) {
+func (u *UserService) LogIn(username, password string) (*json.RawMessage, *http.Response, error) {
 
+	loginDetails := &LoginDetails{Username: username, Password: password}
 	var successLogin = &json.RawMessage{}
 	apiError := new(APIError)
 	path := fmt.Sprintf("login")
-	resp, err := u.sling.New().Post(path).Receive(successLogin, apiError)
+	resp, err := u.sling.New().Get(path).BodyForm(loginDetails).Receive(successLogin, apiError)
 
 	return successLogin, resp, releventError(err, apiError)
 }
