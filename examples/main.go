@@ -24,6 +24,12 @@ type User struct {
 	Password string `json:"password"`
 }
 
+type LoginUser struct {
+	Username     string `json:"username"`
+	ObjectID     string `json:"objectId"`
+	SessionToken string `json:"sessionToken"`
+}
+
 func main() {
 	var c config
 	err := envconfig.Process("PARSE", &c)
@@ -95,6 +101,16 @@ func main() {
 	fmt.Println("Signup Success: ", successSignup.SessionToken)
 
 	// log in
+	fmt.Println(user.Password)
+	jsonRawMessageLogin, _, err := client.Users.LogIn(user.Username, user.Password)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	var userLogin LoginUser
+	err = json.Unmarshal([]byte(*jsonRawMessageLogin), &userLogin)
+	fmt.Println("Login Success: ", userLogin.SessionToken)
 
 	// delete user
 	_, err = client.Users.Delete(successSignup.ObjectID, successSignup.SessionToken)
